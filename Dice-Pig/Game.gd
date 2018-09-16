@@ -73,21 +73,52 @@ func _on_DiceButton_pressed():
     $Turn/Points.text = str(turnPoints)
 
 func _on_Left_pressed():
-    if turnPoints == 0:
-        return
+	if turnPoints == 0:
+		return
     
-    $Sound/Hold.play() # <-- play hold sound
+	$Sound/Hold.play() # <-- play hold sound
         
-    player1Points += turnPoints
-    $Player1/Points.text = str(player1Points)
-    setNextPlayer()
+	player1Points += turnPoints
+	$Player1/Points.text = str(player1Points)
+
+	if _check_For_Winner():
+		_game_Over()
+	else:
+		setNextPlayer()
 
 func _on_Right_pressed():
-    if turnPoints == 0:
-        return
+	if turnPoints == 0:
+		return
         
-    $Sound/Hold.play() # <-- play hold sound
+	$Sound/Hold.play() # <-- play hold sound
         
-    player2Points += turnPoints
-    $Player2/Points.text = str(player2Points)
-    setNextPlayer()
+	player2Points += turnPoints
+	$Player2/Points.text = str(player2Points)
+	
+	if _check_For_Winner():
+		_game_Over()
+	else:
+		setNextPlayer()
+
+func _check_For_Winner():
+	if currentPlayer == 0:
+		if player1Points >= 100:
+			$Player1/P1Winner.visible = true;
+			return true
+		else:
+			return false
+	else:
+		if player2Points >= 100:
+			$Player2/P2Winner.visible = true;
+			return true
+		else:
+			return false
+
+func _game_Over():
+	$DiceButton.disabled = true
+	$Player2/Points.modulate = colorInactive
+	$Player1/Points.modulate = colorInactive
+	$Turn/Right.modulate = colorInactive
+	$Turn/Left.modulate = colorInactive
+	$Turn/Right.disabled = true
+	$Turn/Left.disabled = true
